@@ -28,7 +28,6 @@ public class Main {
 				usage(sb.toString());
 			}
 
-
 			Class<? extends Object> cls = Class.forName(PREFIX + args[0]);
 
 			Method mainMethod = cls.getMethod("main", new Class[] { String[].class });
@@ -43,6 +42,7 @@ public class Main {
 			long time1 = System.currentTimeMillis();
 
 			System.err.println("time elapsed " + (time1-time) + " ms");
+			System.out.println("Hola");
 		} catch (Throwable e) {
 			e.printStackTrace();
 			usage(e.toString());
