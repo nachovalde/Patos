@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
-
+//uhadoop@cluster   -   HADcc5212$oop
 /**
  * Java class to run a remote Hadoop word count job.
  * 
@@ -118,7 +118,7 @@ public class StartsJoin {
 					if(j==i) continue;
 					String s1 = starts.get(i).toString();
 					String s2 = starts.get(j).toString();
-					
+					if(s1.compareTo(s2) == 0) continue;
 					if(s1.compareTo(bacon)==0){
 						s1 = min;
 						s2 = s2+"#1";
