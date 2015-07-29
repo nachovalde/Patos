@@ -1,6 +1,7 @@
 package org.mdp.hadoop.cli;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.hadoop.conf.Configuration;
@@ -52,8 +53,6 @@ public class StartsCount {
 
 		private final IntWritable one = new IntWritable(1);
 		private Text start = new Text();
-
-		
 		/**
 		 * @throws InterruptedException 
 		 * @Override
@@ -70,7 +69,21 @@ public class StartsCount {
 
 		}
 	}
+	public static class AdjacencyListMapper extends Mapper<Object, Text, Text, Text>{
 
+		private Text star1 = new Text();
+		private Text star2 = new Text();
+		public void map(Object key, Text value, Context output)
+						throws IOException, InterruptedException {
+			String line = value.toString();
+			String[] raw = line.split(SPLIT_REGEX);
+			if(raw[0].equals(raw[1])) return;
+			star1.set(raw[0]);
+			star2.set(raw[1]);
+			output.write(star1, star2);
+			output.write(star2, star1);
+		}
+	}
 	/**
 	 * This is the Reducer Class.
 	 * 
@@ -108,6 +121,28 @@ public class StartsCount {
 			output.write(key, new IntWritable(sum));
 		}
 	}
+	public static class AdjacencyListReducer extends Reducer<Text, Text, Text, Text> {
+		/**
+		 * @throws InterruptedException 
+		 * @Override
+		 * 
+		 * This is the reduce method that you're going to write. :)
+		 */
+		static String regular = "|"+Integer.MAX_VALUE+"|WHITE|";
+		static String bacon = "Bacon, Kevin";
+		@Override
+		public void reduce(Text key, Iterable<Text> values,
+				Context output) throws IOException, InterruptedException {
+			Iterator<Text> ite = values.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (ite.hasNext()) {
+				sb.append(ite.next().toString());
+				sb.append("##");
+			}
+			sb.append(key.toString().equals(bacon)?"|"+0+"|GRAY|":regular);
+			output.write(key, new Text(sb.toString()));
+		}
+	}
 
 	/**
 	 * Main method that sets up and runs the job
@@ -132,13 +167,12 @@ public class StartsCount {
 	    FileOutputFormat.setOutputPath(job, new Path(outputLocation));
 	    
 	    job.setOutputKeyClass(Text.class);
-	    job.setOutputValueClass(IntWritable.class);
+	    job.setOutputValueClass(Text.class);
 	    job.setMapOutputKeyClass(Text.class);
-	    job.setMapOutputValueClass(IntWritable.class);
+	    job.setMapOutputValueClass(Text.class);
 	    
-	    job.setMapperClass(StartsCountMapper.class);
-	    job.setCombinerClass(StartsCountReducer.class);
-	    job.setReducerClass(StartsCountReducer.class);
+	    job.setMapperClass(AdjacencyListMapper.class);
+	    job.setReducerClass(AdjacencyListReducer.class);
 	     
 	    job.setJarByClass(StartsCount.class);
 	    job.waitForCompletion(true);	
