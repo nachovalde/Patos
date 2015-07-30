@@ -25,12 +25,14 @@ import org.apache.hadoop.util.GenericOptionsParser;
  * 
  * @author Aidan
  */
+ @Deprecated
 public class StartsJoin {
 	
 	/**
 	 * Use this with line.split(SPLIT_REGEX) to get fairly nice
 	 * word splits.
 	 */
+	 @Deprecated
 	public static String SPLIT_REGEX = "\t";
 	
 	/**
@@ -51,6 +53,7 @@ public class StartsJoin {
 	 * @author Aidan
 	 *
 	 */
+	 @Deprecated
 	public static class StartsJoinMapper extends Mapper<Object, Text, Text, Text>{
 
 		//private final IntWritable one = new IntWritable(1);
@@ -95,6 +98,7 @@ public class StartsJoin {
 	 * @author Aidan
 	 *
 	 */
+	 @Deprecated
 	public static class StartsJoinReducer extends Reducer<Text, Text, Text, IntWritable>{
 		/**
 		 * @throws InterruptedException 
@@ -139,6 +143,7 @@ public class StartsJoin {
 	 * @param args First argument is input, second is output
 	 * @throws Exception
 	 */
+	 @Deprecated
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();

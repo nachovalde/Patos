@@ -96,7 +96,6 @@ public class ActorCount {
 	
 	public static class MovieReducer extends Reducer<Text, Text, Text, NullWritable> {
 		Text out = new Text();
-		static final IntWritable ONE = new IntWritable(1);
 		/**
 		 * @throws InterruptedException 
 		 * @Override
@@ -113,7 +112,7 @@ public class ActorCount {
 			Collections.sort(actors,String.CASE_INSENSITIVE_ORDER);
 			for(int i=0; i<actors.size(); i++){
 				for (int j = i+1; j < actors.size(); j++) {
-					out.set(actors.get(i)+"##"+actors.get(j));
+					out.set(actors.get(i)+"\t"+actors.get(j));
 					output.write(out,NullWritable.get());
 				}
 			}

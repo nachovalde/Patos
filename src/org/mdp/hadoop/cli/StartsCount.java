@@ -129,7 +129,7 @@ public class StartsCount {
 		 * This is the reduce method that you're going to write. :)
 		 */
 		static String regular = "|"+Integer.MAX_VALUE+"|WHITE|";
-		static String bacon = "Bacon, Kevin";
+		static String bacon = "Bacon, Kevin (I)";
 		@Override
 		public void reduce(Text key, Iterable<Text> values,
 				Context output) throws IOException, InterruptedException {
