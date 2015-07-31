@@ -30,45 +30,6 @@ public class StartsCount {
 	 * word splits.
 	 */
 	public static String SPLIT_REGEX = "\t";
-	
-	/**
-	 * This is the Mapper Class. This sends key-value pairs to different machines
-	 * based on the key.
-	 * 
-	 * Remember that the generic is Mapper<InputKey, InputValue, MapKey, MapValue>
-	 * 
-	 * InputKey we don't care about (a LongWritable will be passed as the input
-	 * file offset, but we don't care; we can also set as Object)
-	 * 
-	 * InputKey will be Text: a line of the file
-	 * 
-	 * MapKey will be Text: a word from the file
-	 * 
-	 * MapValue will be IntWritable: a count: emit 1 for each occurrence of the word
-	 * 
-	 * @author Aidan
-	 *
-	 */
-	public static class StartsCountMapper extends Mapper<Object, Text, Text, IntWritable>{
-
-		private final IntWritable one = new IntWritable(1);
-		private Text start = new Text();
-		/**
-		 * @throws InterruptedException 
-		 * @Override
-		 * 
-		 * This is the map method that you're goint to write. :)
-		 */
-		@Override
-		public void map(Object key, Text value, Context output)
-						throws IOException, InterruptedException {
-			String line = value.toString();
-			String[] raw = line.split(SPLIT_REGEX);
-			start.set(raw[0]);
-			output.write(start, one);
-
-		}
-	}
 	public static class AdjacencyListMapper extends Mapper<Object, Text, Text, Text>{
 
 		private Text star1 = new Text();
@@ -82,43 +43,6 @@ public class StartsCount {
 			star2.set(raw[1]);
 			output.write(star1, star2);
 			output.write(star2, star1);
-		}
-	}
-	/**
-	 * This is the Reducer Class.
-	 * 
-	 * This collects sets of key-value pairs with the same key on one machine. 
-	 * 
-	 * Remember that the generic is Reducer<MapKey, MapValue, OutputKey, OutputValue>
-	 * 
-	 * MapKey will be Text: a word from the file
-	 * 
-	 * MapValue will be IntWritable: a count: emit 1 for each occurrence of the word
-	 * 
-	 * OutputKey will be Text: the same word
-	 * 
-	 * OutputValue will be IntWritable: the final count
-	 * 
-	 * @author Aidan
-	 *
-	 */
-	public static class StartsCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-
-		/**
-		 * @throws InterruptedException 
-		 * @Override
-		 * 
-		 * This is the reduce method that you're going to write. :)
-		 */
-		@Override
-		public void reduce(Text key, Iterable<IntWritable> values,
-				Context output) throws IOException, InterruptedException {
-			int sum = 0;
-			Iterator<IntWritable> ite = values.iterator();
-			while (ite.hasNext()) {
-				sum += ite.next().get();
-			}
-			output.write(key, new IntWritable(sum));
 		}
 	}
 	public static class AdjacencyListReducer extends Reducer<Text, Text, Text, Text> {
