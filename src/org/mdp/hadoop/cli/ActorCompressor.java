@@ -21,14 +21,17 @@ public class ActorCompressor {
 	}
 
 	public int compress(String src, String dest) throws IOException{
+		System.err.println("Starting compression");
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		int i=1;
 		map.put(searched, 0);
 		FileSystem fs = FileSystem.get(new Configuration());
 		BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(new Path(src))));
-		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fs.create( new Path(src))));
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fs.create( new Path(dest))));
 		BufferedWriter d = new BufferedWriter(new OutputStreamWriter(fs.create(new Path(dict))));
 		String[] L;
+		System.err.println("Reading input and writing the compressed output");
+		int iter = 0;
 		for(String line = br.readLine(); line!=null; line=br.readLine()){
 			System.out.println(line);
 			L = line.split(SPLIT_REGEX);
@@ -45,11 +48,15 @@ public class ActorCompressor {
 				val = i++;
 			}
 			out.write(val+"\n");
+			if(iter++%100000==0) System.err.println(iter+" lines processed");
 		}
 		br.close();
 		out.close();
+		iter=0;
+		System.err.println("Writing the dictionary");
 		for(String val:map.keySet()){
 			d.write(map.get(val)+"\t"+val+"\n");
+			if(iter++%100000==0) System.err.println(iter+" lines processed");
 		}
 		d.close();
 		return i;
