@@ -40,7 +40,6 @@ public class ActorCompressor {
 				val = i++;
 			}
 			out.write(val+"\t");
-			L = line.split(SPLIT_REGEX);
 			val = map.get(L[1]);
 			if(val==null){
 				map.put(L[1], i);

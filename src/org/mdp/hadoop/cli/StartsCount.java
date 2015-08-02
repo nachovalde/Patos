@@ -51,7 +51,7 @@ public class StartsCount {
 		 * This is the reduce method that you're going to write. :)
 		 */
 		static String regular = "|"+Integer.MAX_VALUE+"|WHITE|";
-		static String bacon = "Bacon, Kevin (I)";
+		static String searched = "0";
 		@Override
 		public void reduce(Text key, Iterable<Text> values,
 				Context output) throws IOException, InterruptedException {
@@ -61,7 +61,7 @@ public class StartsCount {
 				sb.append(ite.next().toString());
 				sb.append("##");
 			}
-			sb.append(key.toString().equals(bacon)?"|"+0+"|GRAY|":regular);
+			sb.append(key.toString().equals(searched)?"|"+0+"|GRAY|":regular);
 			output.write(key, new Text(sb.toString()));
 		}
 	}
