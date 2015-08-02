@@ -47,7 +47,7 @@ public class Node {
 		color = colors.get(line[2]);
 		line = line[0].split("##");
 		//line=["1","2,"4"]
-		for(int i=0; i<line.length;i++){
+		for(int i=0; i<line.length-1;i++){
 			edges.add(Integer.parseInt(line[i]));
 		}
 	}
