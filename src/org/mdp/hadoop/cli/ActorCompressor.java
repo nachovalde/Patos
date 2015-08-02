@@ -2,19 +2,17 @@ package org.mdp.hadoop.cli;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.util.GenericOptionsParser;
-import org.omg.PortableInterceptor.ACTIVE;
+import org.apache.hadoop.util.Progressable;
 
 public class ActorCompressor {
 	static final String SPLIT_REGEX = "\t";
@@ -31,8 +29,8 @@ public class ActorCompressor {
 		map.put(searched, 0);
 		FileSystem fs = FileSystem.get(new Configuration());
 		BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(new Path(src))));
-		BufferedWriter out = new BufferedWriter(new FileWriter(new File(dest)));
-		BufferedWriter d = new BufferedWriter(new FileWriter(new File(dict)));
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fs.create( new Path(src))));
+		BufferedWriter d = new BufferedWriter(new OutputStreamWriter(fs.create(new Path(dict))));
 		String[] L;
 		for(String line = br.readLine(); line!=null; line=br.readLine()){
 			System.out.println(line);
