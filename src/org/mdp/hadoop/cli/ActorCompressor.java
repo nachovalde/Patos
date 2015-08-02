@@ -33,7 +33,6 @@ public class ActorCompressor {
 		System.err.println("Reading input and writing the compressed output");
 		int iter = 0;
 		for(String line = br.readLine(); line!=null; line=br.readLine()){
-			System.out.println(line);
 			L = line.split(SPLIT_REGEX);
 			Integer val = map.get(L[0]);
 			if(val==null){
