@@ -36,6 +36,10 @@ public class Node {
 	}
 
 	public Node(String string) {
+		if(!string.matches("[0-9]+\t([0-9]+##)*\\|[0-9]+|((WHITE)|(GRAY)|(BLACK))|")){
+			System.err.println("Error, linea invalida: "+string);
+			throw new RuntimeException();
+		}
 		//string=5       1##2##4##|2|WHITE|
 		String[] line = string.split("\t");
 		//line=["5","1##2##4##|2|WHITE|"]
