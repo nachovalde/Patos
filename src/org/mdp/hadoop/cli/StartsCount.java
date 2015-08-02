@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -28,22 +29,23 @@ public class StartsCount {
 	 * word splits.
 	 */
 	public static String SPLIT_REGEX = "\t";
-	public static class AdjacencyListMapper extends Mapper<Object, Text, Text, Text>{
+	public static class AdjacencyListMapper extends Mapper<Object, Text, IntWritable, IntWritable>{
 
-		private Text star1 = new Text();
-		private Text star2 = new Text();
+		private IntWritable star1 = new IntWritable();
+		private IntWritable star2 = new IntWritable();
+		@Override
 		public void map(Object key, Text value, Context output)
 						throws IOException, InterruptedException {
 			String line = value.toString();
 			String[] raw = line.split(SPLIT_REGEX);
 			if(raw[0].equals(raw[1])) return;
-			star1.set(raw[0]);
-			star2.set(raw[1]);
+			star1.set(Integer.parseInt(raw[0]));
+			star2.set(Integer.parseInt(raw[1]));
 			output.write(star1, star2);
 			output.write(star2, star1);
 		}
 	}
-	public static class AdjacencyListReducer extends Reducer<Text, Text, Text, Text> {
+	public static class AdjacencyListReducer extends Reducer<IntWritable, IntWritable, IntWritable, Text> {
 		/**
 		 * @throws InterruptedException 
 		 * @Override
@@ -53,9 +55,9 @@ public class StartsCount {
 		static String regular = "|"+Integer.MAX_VALUE+"|WHITE|";
 		static String searched = "0";
 		@Override
-		public void reduce(Text key, Iterable<Text> values,
+		public void reduce(IntWritable key, Iterable<IntWritable> values,
 				Context output) throws IOException, InterruptedException {
-			Iterator<Text> ite = values.iterator();
+			Iterator<IntWritable> ite = values.iterator();
 			StringBuilder sb = new StringBuilder();
 			while (ite.hasNext()) {
 				sb.append(ite.next().toString());
@@ -72,7 +74,6 @@ public class StartsCount {
 	 * @param args First argument is input, second is output
 	 * @throws Exception
 	 */
-	//String baconregex = "\\p{#}*#"+iter;
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
@@ -88,9 +89,9 @@ public class StartsCount {
 	    FileInputFormat.setInputPaths(job, new Path(inputLocation));
 	    FileOutputFormat.setOutputPath(job, new Path(outputLocation));
 	    
-	    job.setOutputKeyClass(Text.class);
-	    job.setOutputValueClass(Text.class);
-	    job.setMapOutputKeyClass(Text.class);
+	    job.setOutputKeyClass(IntWritable.class);
+	    job.setOutputValueClass(IntWritable.class);
+	    job.setMapOutputKeyClass(IntWritable.class);
 	    job.setMapOutputValueClass(Text.class);
 	    
 	    job.setMapperClass(AdjacencyListMapper.class);
