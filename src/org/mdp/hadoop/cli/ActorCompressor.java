@@ -7,9 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.omg.PortableInterceptor.ACTIVE;
 
@@ -26,7 +29,8 @@ public class ActorCompressor {
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		int i=1;
 		map.put(searched, 0);
-		BufferedReader br = new BufferedReader(new FileReader(new File(src)));
+		FileSystem fs = FileSystem.get(new Configuration());
+		BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(new Path(src))));
 		BufferedWriter out = new BufferedWriter(new FileWriter(new File(dest)));
 		BufferedWriter d = new BufferedWriter(new FileWriter(new File(dict)));
 		String[] L;
