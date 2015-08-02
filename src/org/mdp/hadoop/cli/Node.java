@@ -34,9 +34,9 @@ public class Node {
 	public Node(int id) {
 		this.id = id;
 	}
-
+	static final String VALID_REGEX = "[0-9]+\t([0-9]+##)*\\|[0-9]+\\|((WHITE)|(GRAY)|(BLACK))\\|";
 	public Node(String string) {
-		if(!string.matches("[0-9]+\t([0-9]+##)*\\|[0-9]+|((WHITE)|(GRAY)|(BLACK))|")){
+		if(!string.matches(VALID_REGEX)){
 			System.err.println("Error, linea invalida: "+string);
 			throw new RuntimeException();
 		}
