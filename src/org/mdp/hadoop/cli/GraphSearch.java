@@ -7,14 +7,15 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * This is an example Hadoop Map/Reduce application. 
@@ -31,7 +32,7 @@ import org.apache.hadoop.util.ToolRunner;
  * been marked with distance 0 and color GRAY in the original input.  All other
  * nodes will have input distance Integer.MAX_VALUE and color WHITE.
  */
-public class GraphSearch extends Configured implements Tool {
+public class GraphSearch{
 
 	public static final Log LOG = LogFactory.getLog("org.apache.hadoop.examples.GraphSearch");
 
@@ -40,11 +41,9 @@ public class GraphSearch extends Configured implements Tool {
 	 * edge of a Color.GRAY node, we emit a new Node with distance incremented by
 	 * one. The Color.GRAY node is then colored black and is also emitted.
 	 */
-	public static class MapClass extends MapReduceBase implements
-	Mapper<LongWritable, Text, IntWritable, Text> {
+	public static class BFSMapper extends Mapper<Object, Text, IntWritable, Text> {
 
-		public void map(LongWritable key, Text value, OutputCollector<IntWritable, Text> output,
-				Reporter reporter) throws IOException {
+		public void map(IntWritable key, Text value, Context output) throws IOException, InterruptedException {
 
 			Node node = new Node(value.toString());
 
@@ -54,7 +53,7 @@ public class GraphSearch extends Configured implements Tool {
 					Node vnode = new Node(v);
 					vnode.setDistance(node.getDistance() + 1);
 					vnode.setColor(Node.Color.GRAY);
-					output.collect(new IntWritable(vnode.getId()), vnode.getLine());
+					output.write(new IntWritable(vnode.getId()), vnode.getLine());
 				}
 				// We're done with this node now, color it BLACK
 				node.setColor(Node.Color.BLACK);
@@ -62,7 +61,7 @@ public class GraphSearch extends Configured implements Tool {
 
 			// No matter what, we emit the input node
 			// If the node came into this method GRAY, it will be output as BLACK
-			output.collect(new IntWritable(node.getId()), node.getLine());
+			output.write(new IntWritable(node.getId()), node.getLine());
 
 		}
 	}
@@ -70,8 +69,7 @@ public class GraphSearch extends Configured implements Tool {
 	/**
 	 * A reducer class that just emits the sum of the input values.
 	 */
-	public static class Reduce extends MapReduceBase implements
-	Reducer<IntWritable, Text, IntWritable, Text> {
+	public static class BFSReduce extends Reducer<IntWritable, Text, IntWritable, Text> {
 
 		/**
 		 * Make a new node which combines all information for this single node id.
@@ -79,9 +77,10 @@ public class GraphSearch extends Configured implements Tool {
 		 * - The full list of edges 
 		 * - The minimum distance 
 		 * - The darkest Color
+		 * @throws InterruptedException 
 		 */
 		public void reduce(IntWritable key, Iterator<Text> values,
-				OutputCollector<IntWritable, Text> output, Reporter reporter) throws IOException {
+				Context output) throws IOException, InterruptedException {
 
 			List<Integer> edges = null;
 			int distance = Integer.MAX_VALUE;
@@ -114,74 +113,13 @@ public class GraphSearch extends Configured implements Tool {
 			n.setDistance(distance);
 			n.setEdges(edges);
 			n.setColor(color);
-			output.collect(key, new Text(n.getLine()));
-
+			output.write(key, new Text(n.getLine()));
 		}
 	}
 
-	static int printUsage() {
-		System.out.println("graphsearch [-m <num mappers>] [-r <num reducers>]");
-		ToolRunner.printGenericCommandUsage(System.out);
-		return -1;
-	}
 
-	private JobConf getJobConf(String[] args) {
-		JobConf conf = new JobConf(getConf(), GraphSearch.class);
-		conf.setJobName("graphsearch");
-
-		// the keys are the unique identifiers for a Node (ints in this case).
-		conf.setOutputKeyClass(IntWritable.class);
-		// the values are the string representation of a Node
-		conf.setOutputValueClass(Text.class);
-
-		conf.setMapperClass(MapClass.class);
-		conf.setReducerClass(Reduce.class);
-
-		for (int i = 0; i < args.length; ++i) {
-			if ("-m".equals(args[i])) {
-				conf.setNumMapTasks(Integer.parseInt(args[++i]));
-			} else if ("-r".equals(args[i])) {
-				conf.setNumReduceTasks(Integer.parseInt(args[++i]));
-			}
-		}
-
-		return conf;
-	}
-
-	/**
-	 * The main driver for word count map/reduce program. Invoke this method to
-	 * submit the map/reduce job.
-	 * 
-	 * @throws IOException
-	 *           When there is communication problems with the job tracker.
-	 */
-	public int run(String[] args) throws Exception {
-
-		int iterationCount = 0;
-
-		while (keepGoing(iterationCount)) {
-
-			String input;
-			if (iterationCount == 0)
-				input = "/uhadoop/ivalderrama/bfs/input-graph";
-			else
-				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
-
-			String output = "/uhadoop/ivalderrama/bfs/output-graph-" + (iterationCount + 1);
-
-			JobConf conf = getJobConf(args);
-			FileInputFormat.setInputPaths(conf, new Path(input));
-			FileOutputFormat.setOutputPath(conf, new Path(output));
-			RunningJob job = JobClient.runJob(conf);
-
-			iterationCount++;
-		}
-
-		return 0;
-	}
-
-	private boolean keepGoing(int iterationCount) {
-		if(iterationCount >= 4) {
+	private static boolean keepGoing(int iterationCount) {
+		if(iterationCount >= 1) {
 			return false;
 		}
 
@@ -189,8 +127,35 @@ public class GraphSearch extends Configured implements Tool {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int res = ToolRunner.run(new Configuration(), new GraphSearch(), args);
-		System.exit(res);
-	}
+		
+		int iterationCount = 0;
+		while (keepGoing(iterationCount)) {
+			Configuration conf = new Configuration();
+			
+			String input;
+			if (iterationCount == 0)
+				input = "/uhadoop/ivalderrama/bfs/input-graph";
+			else
+				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
+
+			String output = "/uhadoop/ivalderrama/bfs/output-graph-" + (iterationCount + 1);
+			
+			Job job = Job.getInstance(new Configuration());
+		     
+		    FileInputFormat.setInputPaths(job, new Path(input));
+		    FileOutputFormat.setOutputPath(job, new Path(output));
+		    
+		    job.setOutputKeyClass(IntWritable.class);
+		    job.setOutputValueClass(Text.class);
+		    job.setMapOutputKeyClass(IntWritable.class);
+		    job.setMapOutputValueClass(Text.class);
+		    
+		    job.setMapperClass(BFSMapper.class);
+		    job.setReducerClass(BFSReduce.class);
+		     
+		    job.setJarByClass(StartsCount.class);
+		    job.waitForCompletion(true);
+		}
+	}	
 
 }
