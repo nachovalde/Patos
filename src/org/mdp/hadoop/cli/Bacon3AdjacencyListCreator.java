@@ -14,6 +14,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+// input: /uhadoop/ivalderrama/out2/paircompress
+// output: /uhadoop/ivalderrama/bfs
+
 /**
  * Java class to run a remote Hadoop word count job.
  * 
