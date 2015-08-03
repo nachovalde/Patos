@@ -26,7 +26,7 @@
     -->
       <jar jarfile="${dist}/${name}.jar" basedir="bin">
          <manifest>
-            <attribute name="Main-Class" value="org.mdp.hadoop.cli.Bacon4GraphSearch" />
+            <attribute name="Main-Class" value="org.mdp.hadoop.cli.Main" />
          </manifest>
          <!-- put common dependancies lower -->
          <zipfileset src="lib/commons-cli-1.1.jar" />
