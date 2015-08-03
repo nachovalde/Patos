@@ -42,7 +42,7 @@ public class Bacon4GraphSearch{
 	 */
 	public static class BFSMapper extends Mapper<Object, Text, IntWritable, Text> {
 
-		public void map(IntWritable key, Text value, Context output) throws IOException, InterruptedException {
+		public void map(Object key, Text value, Context output) throws IOException, InterruptedException {
 
 			Node node = new Node(value.toString());
 
