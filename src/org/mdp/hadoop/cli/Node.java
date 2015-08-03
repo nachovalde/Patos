@@ -1,5 +1,7 @@
 package org.mdp.hadoop.cli;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,11 +43,21 @@ public class Node {
 		this.id = id;
 	}
 	static final String VALID_REGEX = "[0-9]+\t([0-9]+##)*\\|[0-9]+\\|((WHITE)|(GRAY)|(BLACK))\\|";
-	public Node(String string) {
-		if(!string.matches(VALID_REGEX)){
+	public Node(final String string) {
+		/*if(!string.matches(VALID_REGEX)){
 			System.err.println("Error, linea invalida: "+string);
-			throw new RuntimeException();
-		}
+			throw new RuntimeException(){
+				public void printStackTrace(PrintStream ps){
+					super.printStackTrace(ps);
+					ps.println(string);
+				}
+				@Override
+				public void printStackTrace(PrintWriter pw){
+					super.printStackTrace(pw);
+					pw.println(string);
+				}
+			};
+		}*/
 		//string=5       1##2##4##|2|WHITE|
 		String[] line = string.split("\t");
 		//line=["5","1##2##4##|2|WHITE|"]
@@ -57,17 +69,22 @@ public class Node {
 		color = colors.get(line[2]);
 		line = line[0].split("##");
 		//line=["1","2,"4"]
-		for(int i=0; i<line.length-1;i++){
+		System.err.println(line);
+		for(int i=0; i<line.length;i++){
 			edges.add(Integer.parseInt(line[i]));
 		}
 	}
 	public Text getLine() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(id);
-		sb.append("\t");
-		for(Integer edge:edges){
-			sb.append(edge);
-			sb.append("##");
+		//sb.append(id);
+		//sb.append("\t");
+		if(edges == null){
+			sb.append("NULL");
+		}else{
+			for(Integer edge:edges){
+				sb.append(edge);
+				sb.append("##");
+			}
 		}
 		sb.append("|");
 		sb.append(distance);
