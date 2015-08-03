@@ -163,11 +163,11 @@ public class GraphSearch extends Configured implements Tool {
 
 			String input;
 			if (iterationCount == 0)
-				input = "input-graph";
+				input = "/uhadoop/ivalderrama/bfs/input-graph";
 			else
-				input = "output-graph-" + iterationCount;
+				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
 
-			String output = "output-graph-" + (iterationCount + 1);
+			String output = "/uhadoop/ivalderrama/bfs/output-graph-" + (iterationCount + 1);
 
 			JobConf conf = getJobConf(args);
 			FileInputFormat.setInputPaths(conf, new Path(input));
