@@ -31,7 +31,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * been marked with distance 0 and color GRAY in the original input.  All other
  * nodes will have input distance Integer.MAX_VALUE and color WHITE.
  */
-public class _4GraphSearch{
+public class Bacon4GraphSearch{
 
 	public static final Log LOG = LogFactory.getLog("org.apache.hadoop.examples.GraphSearch");
 
@@ -150,7 +150,7 @@ public class _4GraphSearch{
 		    job.setMapperClass(BFSMapper.class);
 		    job.setReducerClass(BFSReduce.class);
 		     
-		    job.setJarByClass(_3AdjacencyListCreator.class);
+		    job.setJarByClass(Bacon3AdjacencyListCreator.class);
 		    job.waitForCompletion(true);
 		}
 	}	
