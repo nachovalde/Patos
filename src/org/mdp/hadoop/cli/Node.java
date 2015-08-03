@@ -1,6 +1,9 @@
 package org.mdp.hadoop.cli;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.io.Text;
 
@@ -17,6 +20,9 @@ public class Node {
 		}
 		public String getName(){
 			return name;
+		}
+		public boolean darker(Color color) {
+			return this.ordinal() > color.ordinal();
 		}
 	};
 	private static Map<String, Color> colors = new HashMap<String,Color>();

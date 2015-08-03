@@ -15,8 +15,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.mdp.hadoop.cli._3AdjacencyListCreator.AdjacencyListMapper;
-import org.mdp.hadoop.cli._3AdjacencyListCreator.AdjacencyListReducer;
 
 /**
  * This is an example Hadoop Map/Reduce application. 
@@ -104,7 +102,7 @@ public class _4GraphSearch{
 				}
 
 				// Save the darkest color
-				if (u.getColor().ordinal() > color.ordinal()) {
+				if (u.getColor().darker(color)) {
 					color = u.getColor();
 				}
 
