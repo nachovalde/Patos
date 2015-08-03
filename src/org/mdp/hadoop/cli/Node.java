@@ -44,7 +44,7 @@ public class Node {
 		String[] line = string.split("\t");
 		//line=["5","1##2##4##|2|WHITE|"]
 		id = Integer.parseInt(line[0]);
-		line = line[1].split("|");
+		line = line[1].split("\\|");
 		//line=["1##2##4##" , "2" , "WHITE"]
 		edges = new ArrayList<Integer>();
 		distance = Integer.parseInt(line[1]);
