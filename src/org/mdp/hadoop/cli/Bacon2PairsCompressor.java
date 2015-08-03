@@ -11,6 +11,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+// input: /uhadoop/ivalderrama/out1/part-r-00000
+// output: /uhadoop/ivalderrama/out2/dict y /uhadoop/ivalderrama/out2/paircompress 
+
 public class Bacon2PairsCompressor {
 	static final String SPLIT_REGEX = "\t";
 	static final String BACON = "Bacon, Kevin (I)";
