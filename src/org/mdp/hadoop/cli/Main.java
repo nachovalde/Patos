@@ -21,9 +21,7 @@ public class Main {
 		try {
 			if (args.length < 1) {
 				StringBuffer sb = new StringBuffer();
-				sb.append("missing <utility> arg where <utility> one of");
-				sb.append("\n\t"+ExtractActorMovieTable.class.getSimpleName()+": Extract a table of actors from the raw IMDb data");
-				sb.append("\n\t"+WordCount.class.getSimpleName()+": Run a WordCount job");
+				sb.append("missing <utility>");
 				
 				usage(sb.toString());
 			}
