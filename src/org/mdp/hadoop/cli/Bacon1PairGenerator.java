@@ -15,6 +15,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+// input: /uhadoop/shared/imdb/imdb-stars.tsv 
+// output: /uhadoop/ivalderrama/out1
+
 /**
  * Java class to run a remote Hadoop word count job.
  * 
