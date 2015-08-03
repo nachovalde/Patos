@@ -138,7 +138,7 @@ public class Bacon4GraphSearch{
 				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
 
 			String output = "/uhadoop/ivalderrama/bfs/output-graph-" + (iterationCount + 1);
-			
+			++iterationCount;
 			Job job = Job.getInstance(new Configuration());
 		    FileInputFormat.setInputPaths(job, new Path(input));
 		    FileOutputFormat.setOutputPath(job, new Path(output));
