@@ -113,6 +113,7 @@ public class Bacon4GraphSearch{
 			n.setEdges(edges);
 			n.setColor(color);
 			output.write(key, new Text(n.getLine()));
+			output.write(new IntWritable(-2), new Text("mi llave es "+key.get()));
 		}
 	}
 

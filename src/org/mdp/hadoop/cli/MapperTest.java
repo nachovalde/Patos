@@ -16,14 +16,16 @@ public class MapperTest {
 	public static void main(String[] args) {
 		for(String value:ta){
 			Node node = new Node(value.toString());
-
+			String out;
 			// For each GRAY node, emit each of the edges as a new node (also GRAY)
 			if (node.getColor() == Node.Color.GRAY) {
 				for (int v : node.getEdges()) {
 					Node vnode = new Node(v);
 					vnode.setDistance(node.getDistance() + 1);
 					vnode.setColor(Node.Color.GRAY);
-					System.out.println(vnode.getId() + "\t" + vnode.getLine().toString());
+					out = vnode.getId() + "\t" + vnode.getLine().toString();
+					System.out.println(out);
+					System.out.println(new Node(out).getId()+"\t"+new Node(out).getLine().toString());
 				}
 				// We're done with this node now, color it BLACK
 				node.setColor(Node.Color.BLACK);
@@ -31,7 +33,9 @@ public class MapperTest {
 
 			// No matter what, we emit the input node
 			// If the node came into this method GRAY, it will be output as BLACK
-			System.out.println(node.getId() + "\t" + node.getLine().toString());
+			out = node.getId() + "\t" + node.getLine().toString();
+			System.out.println(out);
+			System.out.println("llave es "+node.getId());
 		}
 	}
 	

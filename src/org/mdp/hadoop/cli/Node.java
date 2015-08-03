@@ -69,8 +69,9 @@ public class Node {
 		color = colors.get(line[2]);
 		line = line[0].split("##");
 		//line=["1","2,"4"]
-		System.err.println(line);
+		//System.err.println(line);
 		for(int i=0; i<line.length;i++){
+			if(line[i].equals("")) continue;
 			edges.add(Integer.parseInt(line[i]));
 		}
 	}
@@ -79,7 +80,6 @@ public class Node {
 		//sb.append(id);
 		//sb.append("\t");
 		if(edges == null){
-			sb.append("NULL");
 		}else{
 			for(Integer edge:edges){
 				sb.append(edge);
