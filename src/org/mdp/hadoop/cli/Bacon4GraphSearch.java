@@ -132,7 +132,7 @@ public class Bacon4GraphSearch{
 			
 			String input;
 			if (iterationCount == 0)
-				input = "/uhadoop/ivalderrama/bfs/input-graph";
+				input = "/uhadoop/ivalderrama/bfs/part-r-00000";
 			else
 				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
 
@@ -151,7 +151,7 @@ public class Bacon4GraphSearch{
 		    job.setMapperClass(BFSMapper.class);
 		    job.setReducerClass(BFSReduce.class);
 		     
-		    job.setJarByClass(Bacon3AdjacencyListCreator.class);
+		    job.setJarByClass(Bacon4GraphSearch.class);
 		    job.waitForCompletion(true);
 		}
 	}	
