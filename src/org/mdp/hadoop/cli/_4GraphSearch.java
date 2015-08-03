@@ -15,8 +15,8 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.mdp.hadoop.cli.AdjacencyListCreator.AdjacencyListMapper;
-import org.mdp.hadoop.cli.AdjacencyListCreator.AdjacencyListReducer;
+import org.mdp.hadoop.cli._3AdjacencyListCreator.AdjacencyListMapper;
+import org.mdp.hadoop.cli._3AdjacencyListCreator.AdjacencyListReducer;
 
 /**
  * This is an example Hadoop Map/Reduce application. 
@@ -33,7 +33,7 @@ import org.mdp.hadoop.cli.AdjacencyListCreator.AdjacencyListReducer;
  * been marked with distance 0 and color GRAY in the original input.  All other
  * nodes will have input distance Integer.MAX_VALUE and color WHITE.
  */
-public class GraphSearch{
+public class _4GraphSearch{
 
 	public static final Log LOG = LogFactory.getLog("org.apache.hadoop.examples.GraphSearch");
 
@@ -152,7 +152,7 @@ public class GraphSearch{
 		    job.setMapperClass(BFSMapper.class);
 		    job.setReducerClass(BFSReduce.class);
 		     
-		    job.setJarByClass(AdjacencyListCreator.class);
+		    job.setJarByClass(_3AdjacencyListCreator.class);
 		    job.waitForCompletion(true);
 		}
 	}	

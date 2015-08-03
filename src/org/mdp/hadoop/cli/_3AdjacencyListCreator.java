@@ -22,7 +22,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
  * 
  * @author Aidan
  */
-public class AdjacencyListCreator {
+public class _3AdjacencyListCreator {
 	
 	/**
 	 * Use this with line.split(SPLIT_REGEX) to get fairly nice
@@ -97,7 +97,7 @@ public class AdjacencyListCreator {
 	    job.setMapperClass(AdjacencyListMapper.class);
 	    job.setReducerClass(AdjacencyListReducer.class);
 	     
-	    job.setJarByClass(AdjacencyListCreator.class);
+	    job.setJarByClass(_3AdjacencyListCreator.class);
 	    job.waitForCompletion(true);	
 	}	
 }

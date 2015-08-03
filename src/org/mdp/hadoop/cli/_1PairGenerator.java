@@ -23,7 +23,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
  * 
  * @author Aidan
  */
-public class PairGenerator {
+public class _1PairGenerator {
 	
 	/**
 	 * Use this with line.split(SPLIT_REGEX) to get fairly nice
@@ -146,7 +146,7 @@ public class PairGenerator {
 	    job.setMapperClass(MovieMapper.class);
 	    job.setReducerClass(MovieReducer.class);
 	     
-	    job.setJarByClass(PairGenerator.class);
+	    job.setJarByClass(_1PairGenerator.class);
 		job.waitForCompletion(true);
 	}	
 }
