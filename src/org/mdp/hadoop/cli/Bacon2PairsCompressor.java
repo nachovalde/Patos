@@ -34,18 +34,21 @@ public class Bacon2PairsCompressor {
 		int iter = 0;
 		for(String line = br.readLine(); line!=null; line=br.readLine()){
 			L = line.split(SPLIT_REGEX);
+			
 			Integer val = map.get(L[0]);
 			if(val==null){
 				map.put(L[0], i);
 				val = i++;
 			}
 			out.write(val+"\t");
+			
 			val = map.get(L[1]);
 			if(val==null){
 				map.put(L[1], i);
 				val = i++;
 			}
 			out.write(val+"\n");
+			
 			if(iter++%100000==0) System.err.println(iter+" lines processed");
 		}
 		br.close();

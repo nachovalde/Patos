@@ -88,11 +88,13 @@ public class Bacon3AdjacencyListCreator {
 	     
 	    FileInputFormat.setInputPaths(job, new Path(inputLocation));
 	    FileOutputFormat.setOutputPath(job, new Path(outputLocation));
+
+	    job.setMapOutputKeyClass(IntWritable.class);
+	    job.setMapOutputValueClass(IntWritable.class);
 	    
 	    job.setOutputKeyClass(IntWritable.class);
-	    job.setOutputValueClass(IntWritable.class);
-	    job.setMapOutputKeyClass(IntWritable.class);
-	    job.setMapOutputValueClass(Text.class);
+	    job.setOutputValueClass(Text.class);
+	    
 	    
 	    job.setMapperClass(AdjacencyListMapper.class);
 	    job.setReducerClass(AdjacencyListReducer.class);

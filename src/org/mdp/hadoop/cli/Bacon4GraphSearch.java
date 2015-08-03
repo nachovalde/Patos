@@ -141,11 +141,12 @@ public class Bacon4GraphSearch{
 			Job job = Job.getInstance(new Configuration());
 		    FileInputFormat.setInputPaths(job, new Path(input));
 		    FileOutputFormat.setOutputPath(job, new Path(output));
+
+		    job.setMapOutputKeyClass(IntWritable.class);
+		    job.setMapOutputValueClass(Text.class);
 		    
 		    job.setOutputKeyClass(IntWritable.class);
 		    job.setOutputValueClass(Text.class);
-		    job.setMapOutputKeyClass(IntWritable.class);
-		    job.setMapOutputValueClass(Text.class);
 		    
 		    job.setMapperClass(BFSMapper.class);
 		    job.setReducerClass(BFSReduce.class);
