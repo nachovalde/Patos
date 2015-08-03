@@ -11,11 +11,11 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-public class ActorCompressor {
+public class PairsCompressor {
 	static final String SPLIT_REGEX = "\t";
 	static final String BACON = "Bacon, Kevin (I)";
 	private String dict, searched;
-	public ActorCompressor(String dictPath, String searched){
+	public PairsCompressor(String dictPath, String searched){
 		dict = dictPath;
 		this.searched = searched;
 	}
@@ -68,7 +68,7 @@ public class ActorCompressor {
 		String inputLocation = args[0];
 		String dictLocation = args[1];
 		String outputLocation = args[2];
-		ActorCompressor ac = new ActorCompressor(dictLocation, ActorCompressor.BACON);
+		PairsCompressor ac = new PairsCompressor(dictLocation, PairsCompressor.BACON);
 		ac.compress(inputLocation, outputLocation);
 	}
 

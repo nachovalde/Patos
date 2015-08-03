@@ -1,11 +1,12 @@
 package org.mdp.hadoop.cli;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -22,13 +23,13 @@ import org.apache.hadoop.util.GenericOptionsParser;
  * 
  * @author Aidan
  */
-public class WordCount {
+public class PairGenerator {
 	
 	/**
 	 * Use this with line.split(SPLIT_REGEX) to get fairly nice
 	 * word splits.
 	 */
-	public static String SPLIT_REGEX = "[^\\p{L}'-]+";
+	public static String SPLIT_REGEX = "\t";
 	
 	/**
 	 * This is the Mapper Class. This sends key-value pairs to different machines
@@ -48,28 +49,28 @@ public class WordCount {
 	 * @author Aidan
 	 *
 	 */
-	public static class WordCountMapper extends Mapper<Object, Text, Text, IntWritable>{
-
-		private final IntWritable one = new IntWritable(1);
-		private Text word = new Text();
-
+	public static class MovieMapper extends Mapper<Object, Text, Text, Text>{
+		private Text movie = new Text();
+		private Text actor = new Text();
+		private static final String tmovie = "THEATRICAL_MOVIE";
 		
 		/**
 		 * @throws InterruptedException 
 		 * @Override
 		 * 
-		 * This is the map method that you're goint to write. :)
+		 * This is the map method that you're going to write. :)
 		 */
+		@Override
 		public void map(Object key, Text value, Context output)
 						throws IOException, InterruptedException {
 			String line = value.toString();
-			String[] rawWords = line.split(SPLIT_REGEX);
-			for(String rawWord:rawWords) {
-				if(!rawWord.isEmpty()){
-					word.set(rawWord.toLowerCase());
-					output.write(word, one);
-				}
+			String[] actorEntry = line.split(SPLIT_REGEX);
+			if(actorEntry[4].equals(tmovie)){
+				movie.set((actorEntry[1]+actorEntry[2]+actorEntry[3]).toLowerCase());
+				actor.set(actorEntry[0]);
+				output.write(movie, actor);
 			}
+			
 		}
 	}
 
@@ -91,23 +92,31 @@ public class WordCount {
 	 * @author Aidan
 	 *
 	 */
-	public static class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-
+	
+	public static class MovieReducer extends Reducer<Text, Text, Text, NullWritable> {
+		Text out = new Text();
 		/**
 		 * @throws InterruptedException 
 		 * @Override
 		 * 
 		 * This is the reduce method that you're going to write. :)
 		 */
-		public void reduce(Text key, Iterator<IntWritable> values,
+		@Override
+		public void reduce(Text movie, Iterable<Text> values,
 				Context output) throws IOException, InterruptedException {
-			int sum = 0;
-			while (values.hasNext()) {
-				sum += values.next().get();
+			ArrayList<String> actors = new ArrayList<String>();
+			for(Text actor:values){
+				actors.add(actor.toString());
 			}
-			output.getCounter("words", key.toString().substring(0, 1)).increment(1);;
-			output.write(key, new IntWritable(sum));
+			Collections.sort(actors,String.CASE_INSENSITIVE_ORDER);
+			for(int i=0; i<actors.size(); i++){
+				for (int j = i+1; j < actors.size(); j++) {
+					out.set(actors.get(i)+"\t"+actors.get(j));
+					output.write(out,NullWritable.get());
+				}
+			}
 		}
+		
 	}
 
 	/**
@@ -132,13 +141,12 @@ public class WordCount {
 	    FileOutputFormat.setOutputPath(job, new Path(outputLocation));
 	    
 	    job.setOutputKeyClass(Text.class);
-	    job.setOutputValueClass(IntWritable.class);
+	    job.setOutputValueClass(Text.class);
 	    
-	    job.setMapperClass(WordCountMapper.class);
-	    job.setCombinerClass(WordCountReducer.class);
-	    job.setReducerClass(WordCountReducer.class);
+	    job.setMapperClass(MovieMapper.class);
+	    job.setReducerClass(MovieReducer.class);
 	     
-	    job.setJarByClass(WordCount.class);
-		job.submit();
+	    job.setJarByClass(PairGenerator.class);
+		job.waitForCompletion(true);
 	}	
 }

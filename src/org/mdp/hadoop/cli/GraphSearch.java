@@ -10,12 +10,13 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.mdp.hadoop.cli.AdjacencyListCreator.AdjacencyListMapper;
+import org.mdp.hadoop.cli.AdjacencyListCreator.AdjacencyListReducer;
 
 /**
  * This is an example Hadoop Map/Reduce application. 
@@ -130,7 +131,6 @@ public class GraphSearch{
 		
 		int iterationCount = 0;
 		while (keepGoing(iterationCount)) {
-			Configuration conf = new Configuration();
 			
 			String input;
 			if (iterationCount == 0)
@@ -141,7 +141,6 @@ public class GraphSearch{
 			String output = "/uhadoop/ivalderrama/bfs/output-graph-" + (iterationCount + 1);
 			
 			Job job = Job.getInstance(new Configuration());
-		     
 		    FileInputFormat.setInputPaths(job, new Path(input));
 		    FileOutputFormat.setOutputPath(job, new Path(output));
 		    
@@ -153,7 +152,7 @@ public class GraphSearch{
 		    job.setMapperClass(BFSMapper.class);
 		    job.setReducerClass(BFSReduce.class);
 		     
-		    job.setJarByClass(StartsCount.class);
+		    job.setJarByClass(AdjacencyListCreator.class);
 		    job.waitForCompletion(true);
 		}
 	}	

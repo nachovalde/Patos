@@ -22,7 +22,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
  * 
  * @author Aidan
  */
-public class StartsCount {
+public class AdjacencyListCreator {
 	
 	/**
 	 * Use this with line.split(SPLIT_REGEX) to get fairly nice
@@ -97,7 +97,7 @@ public class StartsCount {
 	    job.setMapperClass(AdjacencyListMapper.class);
 	    job.setReducerClass(AdjacencyListReducer.class);
 	     
-	    job.setJarByClass(StartsCount.class);
+	    job.setJarByClass(AdjacencyListCreator.class);
 	    job.waitForCompletion(true);	
 	}	
 }
