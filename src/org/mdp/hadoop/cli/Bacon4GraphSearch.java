@@ -1,7 +1,6 @@
 package org.mdp.hadoop.cli;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -42,6 +41,7 @@ public class Bacon4GraphSearch{
 	 */
 	public static class BFSMapper extends Mapper<Object, Text, IntWritable, Text> {
 
+		@Override
 		public void map(Object key, Text value, Context output) throws IOException, InterruptedException {
 
 			Node node = new Node(value.toString());
@@ -78,15 +78,15 @@ public class Bacon4GraphSearch{
 		 * - The darkest Color
 		 * @throws InterruptedException 
 		 */
-		public void reduce(IntWritable key, Iterator<Text> values,
+		@Override
+		public void reduce(IntWritable key, Iterable<Text> vals,
 				Context output) throws IOException, InterruptedException {
 
 			List<Integer> edges = null;
 			int distance = Integer.MAX_VALUE;
 			Node.Color color = Node.Color.WHITE;
 
-			while (values.hasNext()) {
-				Text value = values.next();
+			for (Text value:vals) {
 
 				Node u = new Node(key.get() + "\t" + value.toString());
 
@@ -113,12 +113,12 @@ public class Bacon4GraphSearch{
 			n.setEdges(edges);
 			n.setColor(color);
 			output.write(key, new Text(n.getLine()));
-			output.write(new IntWritable(-2), new Text("mi llave es "+key.get()));
 		}
 	}
 
 
 	private static boolean keepGoing(int iterationCount) {
+		String location = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
 		if(iterationCount >= 1) {
 			return false;
 		}
