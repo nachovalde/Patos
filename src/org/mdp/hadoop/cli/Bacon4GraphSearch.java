@@ -119,6 +119,8 @@ public class Bacon4GraphSearch{
 
 	private static boolean keepGoing(int iterationCount) {
 		String location = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
+		//Excercise for the reader:
+		//Read the file at location and output true if a gray node is found, fale if reached eof.
 		if(iterationCount >= 7) {
 			return false;
 		}
