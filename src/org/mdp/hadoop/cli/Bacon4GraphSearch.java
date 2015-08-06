@@ -119,7 +119,7 @@ public class Bacon4GraphSearch{
 
 	private static boolean keepGoing(int iterationCount) {
 		String location = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
-		if(iterationCount >= 1) {
+		if(iterationCount >= 7) {
 			return false;
 		}
 
@@ -135,7 +135,7 @@ public class Bacon4GraphSearch{
 			if (iterationCount == 0)
 				input = "/uhadoop/ivalderrama/bfs/part-r-00000";
 			else
-				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount;
+				input = "/uhadoop/ivalderrama/bfs/output-graph-" + iterationCount + "/part-r-00000";
 
 			String output = "/uhadoop/ivalderrama/bfs/output-graph-" + (iterationCount + 1);
 			++iterationCount;
